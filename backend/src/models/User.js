@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,  // Tự động chuyển về chữ thường
     },
 
-    hashedPassword: {   // Lưu mật khẩu đã mã hóa (không bao giờ lưu mật khẩu gốc)
+    password: {   // Lưu mật khẩu đã mã hóa (không bao giờ lưu mật khẩu gốc)
       type: String,
       required: true,
     },
@@ -61,5 +61,5 @@ const userSchema = new mongoose.Schema(
 
 // Tạo model User để mongoose map với collection "users"
 const User = mongoose.model("User", userSchema);
-
 export default User;
+
