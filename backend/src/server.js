@@ -5,7 +5,7 @@ import authRoute from "./routes/authRoute.js"
 import cookieParser from "cookie-parser";
 import { protectedRoute } from './middlewares/authMiddleware.js';
 import userRoute from "./routes/userRoute.js";
-
+import cors from "cors";
 
 
 dotenv.config(); //load các biến mt
@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 5001;// lấy giá trị tại PORT 5001
 //middlewares
 app.use(express.json()); //đọc request dạng json
 app.use(cookieParser());
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 //public_routes
 app.use('/api/auth', authRoute);

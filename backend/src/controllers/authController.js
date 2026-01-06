@@ -193,50 +193,50 @@ export const signOut = async (req, res) => {
   }
 };
 
-// // Refresh token
-// export const refreshToken = async (req, res) => {
-//   try {
-//     const incomingToken = req.cookies?.refreshToken;
+// Refresh token
+export const refreshToken = async (req, res) => {
+  try {
+    const incomingToken = req.cookies?.refreshToken;
 
-//     if (!incomingToken) {
-//       return res.status(401).json({ message: "Không có refresh token" });
-//     }
+    if (!incomingToken) {
+      return res.status(401).json({ message: "Không có refresh token" });
+    }
 
-//     // Tìm session khớp với incoming token (so sánh hash)
-//     let validSession = null;
-//     const sessions = await Session.find({ expiresAt: { $gt: new Date() } }); // chỉ lấy chưa hết hạn
+    // Tìm session khớp với incoming token (so sánh hash)
+    let validSession = null;
+    const sessions = await Session.find({ expiresAt: { $gt: new Date() } }); // chỉ lấy chưa hết hạn
 
-//     for (const session of sessions) {
-//       const isMatch = await bcrypt.compare(incomingToken, session.refreshToken);
-//       if (isMatch) {
-//         validSession = session;
-//         break;
-//       }
-//     }
+    for (const session of sessions) {
+      const isMatch = await bcrypt.compare(incomingToken, session.refreshToken);
+      if (isMatch) {
+        validSession = session;
+        break;
+      }
+    }
 
-//     if (!validSession) {
-//       return res.status(403).json({ message: "Refresh token không hợp lệ hoặc đã hết hạn" });
-//     }
+    if (!validSession) {
+      return res.status(403).json({ message: "Refresh token không hợp lệ hoặc đã hết hạn" });
+    }
 
-//     // Optional: thêm kiểm tra isRevoked nếu có field này
-//     // if (validSession.isRevoked) { return res.status(403)... }
+    // Optional: thêm kiểm tra isRevoked nếu có field này
+    // if (validSession.isRevoked) { return res.status(403)... }
 
-//     // Tạo access token mới
-//     const payload = {
-//       userId: validSession.userId,
-//       username: (await User.findById(validSession.userId))?.username || '', // optional
-//     };
+    // Tạo access token mới
+    const payload = {
+      userId: validSession.userId,
+      username: (await User.findById(validSession.userId))?.username || '', // optional
+    };
 
-//     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-//       expiresIn: ACCESS_TOKEN_TTL,
-//     });
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: ACCESS_TOKEN_TTL,
+    });
 
-//     return res.status(200).json({ accessToken });
-//   } catch (error) {
-//     console.error("Lỗi khi refresh token:", error);
-//     return res.status(500).json({ message: "Lỗi hệ thống" });
-//   }
-// };
+    return res.status(200).json({ accessToken });
+  } catch (error) {
+    console.error("Lỗi khi refresh token:", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
 
 // // tạo access token mới từ refresh token
 // export const refreshToken = async (req, res) => {

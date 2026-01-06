@@ -1,4 +1,4 @@
-import { SignupForm } from "@/components/signup-form";
+import { SignupForm } from "@/components/auth/signup-form";
 
 const SignUpPage = () => {
   return (
@@ -11,3 +11,4 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
+
