@@ -58,7 +58,7 @@ export const signUp = async (req, res) => {
       username: normalizedUsername,
       password: hashedPassword, // Đảm bảo field trong schema là "password", không phải hashedPassword
       email: normalizedEmail,
-      displayName: `${firstName.trim()} ${lastName.trim()}`,
+      displayName: `${lastName.trim()} ${firstName.trim()}`,
     });
 
     // Trả về thành công

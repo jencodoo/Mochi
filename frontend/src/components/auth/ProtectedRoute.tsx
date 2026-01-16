@@ -6,22 +6,33 @@ const ProtectedRoute = () => {
   const { accessToken, user, loading, refresh, fetchMe } = useAuthStore();
   const [starting, setStarting] = useState(true);
 
-  const init = async () => {
-    // có thể xảy ra khi refresh trang
-    if (!accessToken) {
-      await refresh();
-    }
-
-    if (accessToken && !user) {
-      await fetchMe();
-    }
-
-    setStarting(false);
-  };
-
   useEffect(() => {
+    let isMounted = true;
+
+    const init = async () => {
+      try {
+        // refresh token nếu chưa có accessToken
+        if (!accessToken) {
+          await refresh();
+        }
+
+        // fetch user nếu đã có token nhưng chưa có user
+        if (accessToken && !user) {
+          await fetchMe();
+        }
+      } finally {
+        if (isMounted) {
+          setStarting(false);
+        }
+      }
+    };
+
     init();
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [accessToken, user, refresh, fetchMe]);
 
   if (starting || loading) {
     return (
@@ -32,15 +43,10 @@ const ProtectedRoute = () => {
   }
 
   if (!accessToken) {
-    return (
-      <Navigate
-        to="/signin"
-        replace
-      />
-    );
+    return <Navigate to="/signin" replace />;
   }
 
-  return <Outlet></Outlet>;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
